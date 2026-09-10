@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0d1726">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MADHYUM CRM">
+  <title>MADHYUM CRM</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <section id="loginView" class="login-view">
+    <div class="login-card">
+      <div class="brand-mark">M</div>
+      <div class="eyebrow">MADHYUM GROUP</div>
+      <h1>CRM</h1>
+      <p class="muted">One secure login for Admin, BDM and Agent.</p>
+
+      <div class="segmented" role="tablist" aria-label="Login type">
+        <button class="seg active" id="agentLoginTab" type="button">Agent / BDM</button>
+        <button class="seg" id="adminLoginTab" type="button">Admin</button>
+      </div>
+
+      <form id="loginForm" autocomplete="on">
+        <label class="field-label" for="loginId">ID</label>
+        <input id="loginId" class="input" autocomplete="username" placeholder="Enter your ID" required>
+        <label class="field-label" for="loginPassword">Password</label>
+        <div class="password-wrap">
+          <input id="loginPassword" class="input" type="password" autocomplete="current-password" placeholder="Enter password" required>
+          <button id="togglePassword" class="icon-btn inside" type="button" aria-label="Show password">👁</button>
+        </div>
+        <button id="loginButton" class="primary-btn" type="submit">Login</button>
+        <div id="loginMessage" class="form-message"></div>
+      </form>
+      <p class="tiny muted center">MADHYUM Group • CRM Mobile</p>
+    </div>
+  </section>
+
+  <section id="appView" class="app-view hidden">
+    <header class="app-header">
+      <div>
+        <div class="eyebrow">MADHYUM GROUP</div>
+        <h2 id="screenTitle">Dashboard</h2>
+        <div id="userLine" class="user-line"></div>
+      </div>
+      <button id="refreshButton" class="icon-btn" type="button" aria-label="Refresh">↻</button>
+    </header>
+
+    <main id="mainContent" class="main-content"></main>
+
+    <nav id="bottomNav" class="bottom-nav" aria-label="Primary navigation"></nav>
+  </section>
+
+  <div id="modalRoot"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
