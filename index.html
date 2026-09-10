@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#071827">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="MADHYUM GROUP CRM — Admin, BDM and Agent portal">
+  <title>MADHYUM GROUP CRM</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon/icon-192.png">
+  <link rel="apple-touch-icon" href="icon/icon-192.png">
+  <link rel="stylesheet" href="css/app.css?v=20260910.1">
+</head>
+<body>
+  <section id="loginView" class="login-view" aria-label="MADHYUM CRM login">
+    <div class="login-shell">
+      <div class="login-topline">CONNECT <i></i> COLLABORATE <i></i> GROW</div>
+      <div class="login-panel">
+        <img class="login-logo" src="madhyum-brand.png" alt="MADHYUM GROUP — Sabse Bharosemand Zariya">
+        <div class="logo-divider"></div>
+        <h1 class="login-crm">CRM</h1>
+        <p class="login-subtitle">One secure login for Admin, BDM and Agent.</p>
+
+        <div class="role-tabs" aria-label="Select login type">
+          <button id="agentLoginTab" class="active" type="button"><span class="tab-icon">♟</span>Agent / BDM</button>
+          <button id="adminLoginTab" type="button"><span class="tab-icon">◇</span>Admin</button>
+        </div>
+
+        <form id="loginForm" novalidate>
+          <label class="login-label" for="loginId">LOGIN ID / EMAIL</label>
+          <div class="login-input-wrap">
+            <span class="input-icon" aria-hidden="true">◎</span>
+            <input id="loginId" type="text" autocomplete="username" placeholder="Enter Agent / BDM ID" required>
+          </div>
+
+          <label class="login-label" for="loginPassword">PASSWORD</label>
+          <div class="login-input-wrap">
+            <span class="input-icon" aria-hidden="true">▣</span>
+            <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Enter password" required>
+            <button id="togglePassword" type="button" aria-label="Show or hide password">◉</button>
+          </div>
+
+          <div class="login-options">
+            <label class="remember"><input id="rememberLogin" type="checkbox"><span>Remember me</span></label>
+            <button id="forgotPassword" class="forgot" type="button">Forgot password?</button>
+          </div>
+
+          <button id="loginButton" class="login-btn" type="submit">Login <span>→</span></button>
+          <div id="loginMessage" class="login-message" role="alert" aria-live="polite"></div>
+        </form>
+
+        <div class="login-footer-line"><span></span><b>PEOPLE • OPPORTUNITIES • PROGRESS</b><span></span></div>
+        <div class="login-wings" aria-label="MADHYUM business wings">
+          <span>REAL ESTATE</span><span>TRAVEL</span><span>ADMISSION</span><span>CONSULTANCY</span><span>EVENTS</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="appView" class="app hidden">
+    <header class="app-header">
+      <div class="app-brand-row">
+        <div class="app-identity">
+          <div class="app-brand">MADHYUM GROUP</div>
+          <div class="app-crm">CRM</div>
+        </div>
+        <button id="refreshButton" class="avatar" type="button" aria-label="Refresh CRM">↻</button>
+      </div>
+      <div class="role-pill" id="screenTitle">Dashboard</div>
+      <h1 id="userLine">Loading...</h1>
+      <p>Everything that needs attention, in one place.</p>
+    </header>
+    <main id="mainContent" class="main-content" aria-live="polite"></main>
+    <nav id="bottomNav" class="bottom-nav" aria-label="CRM navigation"></nav>
+  </section>
+
+  <div id="modalRoot"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="js/core.js?v=20260910.2" defer></script>
+  <script src="js/api.js?v=20260910.2" defer></script>
+  <script src="js/auth.js?v=20260910.2" defer></script>
+  <script src="js/navigation.js?v=20260910.2" defer></script>
+  <script src="js/agent.js?v=20260910.2" defer></script>
+  <script src="js/admin.js?v=20260910.2" defer></script>
+  <script src="js/app.js?v=20260910.2" defer></script>
+  <script>
+    window.addEventListener('DOMContentLoaded',function(){
+      const forgot=document.getElementById('forgotPassword');
+      if(forgot)forgot.addEventListener('click',function(){
+        const msg=document.getElementById('loginMessage');
+        if(msg) msg.textContent='Please contact the MADHYUM administrator to reset your password.';
+      });
+    });
+  </script>
+</body>
+</html>
