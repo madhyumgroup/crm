@@ -1,4 +1,4 @@
-const CACHE = 'madhyum-crm-v4';
+const CACHE = 'madhyum-crm-v5';
 const APP = [
   './',
   './index.html',
