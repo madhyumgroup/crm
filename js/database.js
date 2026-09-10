@@ -1,6 +1,7 @@
 import { SUPABASE_URL, SUPABASE_ANON_KEY, DEMO_MODE } from './config.js';
 
-const LOCAL_KEY='madhyum_crm_offline_v3';
+const LOCAL_KEY='madhyum_crm_offline_v4';
+const DEMO_AUTH_KEY='madhyum_crm_demo_session_v1';
 const seed=[
  {id:'demo-1',name:'Aarav Sharma',mobile:'9876543210',city:'Bhopal',wing:'Travel',requirement:'Goa package • 4 adults • 4N/5D',status:'HOT',followup_at:new Date(Date.now()+3600000).toISOString(),assigned_to:null,notes:['Package options discussed','Final pricing to be shared'],created_at:new Date().toISOString()},
  {id:'demo-2',name:'Neha Verma',mobile:'9893012345',city:'Bhopal',wing:'Real Estate',requirement:'3 BHK near Hoshangabad Road',status:'NEW',followup_at:new Date(Date.now()+4*3600000).toISOString(),assigned_to:null,notes:['Budget confirmation pending'],created_at:new Date().toISOString()}
@@ -20,14 +21,46 @@ function localLeads(){
   try{return JSON.parse(raw)}catch{return structuredClone(seed)}
 }
 function saveLocal(list){localStorage.setItem(LOCAL_KEY,JSON.stringify(list))}
+function demoSession(){
+  try{return JSON.parse(localStorage.getItem(DEMO_AUTH_KEY)||'null')}catch{return null}
+}
 
 export async function backendMode(){return DEMO_MODE?'demo':'online'}
-export async function session(){const c=await supabase(); if(!c)return {user:{id:'demo-user',email:'demo@madhyum.local'}}; const {data}=await c.auth.getSession(); return data.session}
-export async function signIn(email,password){const c=await supabase(); if(!c)return {user:{email:'demo@madhyum.local'}}; const {data,error}=await c.auth.signInWithPassword({email,password}); if(error)throw error; return data}
-export async function signOut(){const c=await supabase(); if(c){const {error}=await c.auth.signOut(); if(error)throw error}}
+export async function session(){
+  const c=await supabase();
+  if(!c)return demoSession();
+  const {data,error}=await c.auth.getSession();
+  if(error)throw error;
+  return data.session;
+}
+export async function signIn(email,password){
+  const cleanEmail=String(email||'').trim();
+  const cleanPassword=String(password||'');
+  if(!cleanEmail||!cleanPassword)throw new Error('Enter email and password.');
+  const c=await supabase();
+  if(!c){
+    const demo={user:{id:'demo-user',email:cleanEmail},demo:true};
+    localStorage.setItem(DEMO_AUTH_KEY,JSON.stringify(demo));
+    return demo;
+  }
+  const {data,error}=await c.auth.signInWithPassword({email:cleanEmail,password:cleanPassword});
+  if(error)throw error;
+  return data;
+}
+export async function signOut(){
+  const c=await supabase();
+  if(!c){localStorage.removeItem(DEMO_AUTH_KEY);return}
+  const {error}=await c.auth.signOut();
+  if(error)throw error;
+}
 
 export async function getProfile(){
-  const c=await supabase(); if(!c)return {full_name:'Saif',role:'admin'};
+  const c=await supabase();
+  if(!c){
+    const s=demoSession();
+    if(!s?.user)return null;
+    return {full_name:'Saif',role:'admin'};
+  }
   const s=await session(); if(!s?.user)return null;
   const {data,error}=await c.from('profiles').select('id,full_name,role').eq('id',s.user.id).single();
   if(error)throw error; return data;
@@ -41,7 +74,11 @@ export async function getLeads(){
 export async function addLead(lead){
   const c=await supabase();
   const payload={...lead,followup_at:lead.followup_at||null,status:lead.status||'NEW'};
-  if(!c){const item={...payload,id:crypto.randomUUID(),created_at:new Date().toISOString(),notes:['Inquiry created']};const list=localLeads();list.unshift(item);saveLocal(list);return item}
+  if(!c){
+    if(!demoSession()?.user)throw new Error('Please sign in again.');
+    const item={...payload,id:crypto.randomUUID(),created_at:new Date().toISOString(),notes:['Inquiry created']};
+    const list=localLeads();list.unshift(item);saveLocal(list);return item;
+  }
   const s=await session(); if(!s?.user)throw new Error('Please sign in again.');
   payload.created_by=s.user.id;
   const {data,error}=await c.from('leads').insert(payload).select().single(); if(error)throw error; return data;
