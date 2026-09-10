@@ -23,39 +23,54 @@ function followups(){const list=leads.filter(x=>x.followup_at).sort((a,b)=>new D
 function more(){return shell(`<section class="content page"><div class="page-title"><div><h1>More</h1><p>${esc(profile?.role||'user')} account • ${mode==='online'?'Online':'Demo'}</p></div></div><div class="menu-card"><button><span>♙</span><div><b>Members</b><small>Membership database</small></div><i>›</i></button><button><span>◇</span><div><b>Partners</b><small>Partner & provider network</small></div><i>›</i></button><button><span>▥</span><div><b>Reports</b><small>Conversion & performance</small></div><i>›</i></button><button data-signout><span>↪</span><div><b>Sign out</b><small>End this session</small></div><i>›</i></button></div>${mode==='demo'?'<div class="setup-note"><b>Online sync is not connected yet.</b><p>Add your Supabase URL and anon key in <code>js/config.js</code>, then run <code>supabase/schema.sql</code> once.</p></div>':''}</section>`)}
 function render(){app.innerHTML=page==='home'?home():page==='leads'?leadsPage():page==='followups'?followups():more();bind()}
 function renderLogin(){
-  app.innerHTML=`<main class="login-wrap">
-    <section class="login-card">
-      <div class="login-brand-block">
-        <div class="brand-logo-wrap">
-          <img class="brand-logo-img" src="madhyum-brand.png" alt="MADHYUM GROUP" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
-          <div class="login-monogram brand-fallback">M</div>
+  app.innerHTML=`<main class="login-wrap login-reference-style">
+    <section class="login-panel">
+      <div class="login-topline">CONNECT <span>|</span> COLLABORATE <span>|</span> GROW</div>
+
+      <div class="login-brand-center">
+        <img class="login-logo" src="madhyum-brand.png" alt="MADHYUM GROUP" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <div class="login-brand-fallback" style="display:none">
+          <div class="fallback-m">M</div>
+          <div class="fallback-name">MADHYUM</div>
+          <div class="fallback-group">GROUP</div>
         </div>
-        <div>
-          <div class="login-company">MADHYUM GROUP</div>
-          <div class="login-tagline">Ek Bharosemand Zariya</div>
-          <div class="login-crm-title">CRM</div>
+        <div class="login-tagline">Sabse Bharosemand Zariya</div>
+      </div>
+
+      <div class="login-divider"></div>
+      <div class="login-crm">CRM</div>
+      <p class="login-subtitle">One secure login for Admin, BDM and Agent.</p>
+
+      <div class="role-tabs role-tabs-reference" role="tablist" aria-label="Select login type">
+        <button type="button" data-role="agent" class="${loginRole==='agent'?'active':''}">♟&nbsp; Agent / BDM</button>
+        <button type="button" data-role="admin" class="${loginRole==='admin'?'active':''}">◇&nbsp; Admin</button>
+      </div>
+
+      <form id="login" class="login-form-reference">
+        <label>LOGIN ID / EMAIL
+          <div class="login-input-wrap"><span class="field-icon">◯</span><input name="identifier" type="text" autocomplete="username" placeholder="Enter Login ID / Email" required></div>
+        </label>
+        <label>PASSWORD
+          <div class="login-input-wrap"><span class="field-icon">▢</span><input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter password" required><button type="button" class="show-password show-password-reference" id="show-password">◉</button></div>
+        </label>
+
+        <div class="login-options">
+          <label class="remember"><input type="checkbox" id="remember-me" checked><span>Remember me</span></label>
+          <button type="button" class="forgot" id="forgot-password">Forgot password?</button>
         </div>
-      </div>
-      <div class="role-tabs" role="tablist" aria-label="Select login type">
-        <button type="button" data-role="admin" class="${loginRole==='admin'?'active':''}">Admin Login</button>
-        <button type="button" data-role="agent" class="${loginRole==='agent'?'active':''}">Agent Login</button>
-      </div>
-      <h1>${loginRole==='admin'?'Admin':'Agent'} Login</h1>
-      <p>Sign in to MADHYUM GROUP CRM.</p>
-      <form id="login">
-        <label>Login ID / Email<input name="identifier" type="text" autocomplete="username" placeholder="Enter Login ID or Email" required></label>
-        <label>Password<div class="password-wrap"><input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter password" required><button type="button" class="show-password" id="show-password">Show</button></div></label>
-        <button class="primary login-submit">Login</button>
+
+        <button class="login-gold-btn login-submit">Login <span>→</span></button>
       </form>
-      <div class="login-footer">MADHYUM GROUP • ${loginRole==='admin'?'ADMIN':'AGENT'} ACCESS</div>
     </section>
   </main>`;
+
   app.querySelectorAll('[data-role]').forEach(btn=>btn.onclick=()=>{loginRole=btn.dataset.role;renderLogin()});
   const toggle=app.querySelector('#show-password'),pwd=app.querySelector('#password');
-  toggle.onclick=()=>{const show=pwd.type==='password';pwd.type=show?'text':'password';toggle.textContent=show?'Hide':'Show'};
+  toggle.onclick=()=>{const show=pwd.type==='password';pwd.type=show?'text':'password';toggle.textContent=show?'◌':'◉'};
+  app.querySelector('#forgot-password').onclick=()=>toast('Please contact MADHYUM Admin to reset your password.');
   app.querySelector('#login').onsubmit=async e=>{
     e.preventDefault();if(busy)return;busy=true;
-    const btn=e.currentTarget.querySelector('.login-submit');btn.disabled=true;btn.textContent='Logging in…';
+    const btn=e.currentTarget.querySelector('.login-submit');btn.disabled=true;btn.innerHTML='Logging in…';
     try{
       const d=Object.fromEntries(new FormData(e.currentTarget));
       setDemoRole(loginRole);
@@ -63,11 +78,11 @@ function renderLogin(){
       profile=await getProfile();
       if(mode==='online' && profile?.role && profile.role!==loginRole){
         await signOut();
-        throw new Error(`This account is registered as ${profile.role}. Please use ${profile.role==='admin'?'Admin':'Agent'} Login.`);
+        throw new Error(`This account is registered as ${profile.role}. Please use ${profile.role==='admin'?'Admin':'Agent / BDM'} Login.`);
       }
       page='home';await refresh();startLiveSync();
     }catch(err){toast(err.message||'Login failed')}
-    finally{busy=false;btn.disabled=false;btn.textContent='Login'}
+    finally{busy=false;btn.disabled=false;btn.innerHTML='Login <span>→</span>'}
   };
 }
 function addModal(){modal.innerHTML=`<div class="sheet"><form class="panel" id="lead-form"><div class="handle"></div><div class="modal-head"><div><h2>New Inquiry</h2><p>Only essentials. Add details later.</p></div><button type="button" class="close" data-close>×</button></div><label>Name<input name="name" required autocomplete="name" placeholder="Customer name"></label><div class="two"><label>Mobile<input name="mobile" required inputmode="tel" pattern="[0-9+ -]{8,15}" placeholder="10-digit number"></label><label>City<input name="city" placeholder="Bhopal"></label></div><label>Wing<select name="wing">${wings.map(w=>`<option>${esc(w)}</option>`).join('')}</select></label><label>Requirement<textarea name="requirement" required placeholder="What does the customer need?"></textarea></label><div class="two"><label>Status<select name="status"><option>NEW</option><option>CONTACTED</option><option>INTERESTED</option><option>HOT</option><option>CONVERTED</option><option>CLOSED</option></select></label><label>Follow-up<input name="followup_at" type="datetime-local"></label></div><button class="primary">Save Inquiry</button></form></div>`;bindSheet();modal.querySelector('#lead-form').onsubmit=async e=>{e.preventDefault();if(busy)return;busy=true;try{const d=Object.fromEntries(new FormData(e.currentTarget));d.mobile=d.mobile.replace(/\D/g,'').slice(-10);d.followup_at=d.followup_at?new Date(d.followup_at).toISOString():null;await addLead(d);modal.innerHTML='';toast('Inquiry saved');await refresh()}catch(err){toast(err.message||'Could not save')}finally{busy=false}}}
