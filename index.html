@@ -17,30 +17,54 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <section id="loginView" class="login-view">
-    <div class="login-card">
-      <div class="login-brand-panel">
-        <img src="madhyum-brand.png" alt="MADHYUM Group" class="login-brand-image">
-      </div>
-      <div class="crm-product-label">CRM</div>
-      <p class="muted">One secure login for Admin, BDM and Agent.</p>
-
-      <div class="segmented" role="tablist" aria-label="Login type">
-        <button class="seg active" id="agentLoginTab" type="button">Agent / BDM</button>
-        <button class="seg" id="adminLoginTab" type="button">Admin</button>
-      </div>
-
-      <form id="loginForm" autocomplete="on">
-        <label class="field-label" for="loginId">ID</label>
-        <input id="loginId" class="input" autocomplete="username" placeholder="Enter your ID" required>
-        <label class="field-label" for="loginPassword">Password</label>
-        <div class="password-wrap">
-          <input id="loginPassword" class="input" type="password" autocomplete="current-password" placeholder="Enter password" required>
-          <button id="togglePassword" class="icon-btn inside" type="button" aria-label="Show password">👁</button>
+    <div class="login-shell">
+      <div class="login-topline">CONNECT <span>|</span> COLLABORATE <span>|</span> GROW</div>
+      <div class="login-card">
+        <div class="login-brand-panel">
+          <img src="madhyum-brand.png" alt="MADHYUM Group" class="login-brand-image">
         </div>
-        <button id="loginButton" class="primary-btn" type="submit">Login</button>
-        <div id="loginMessage" class="form-message"></div>
-      </form>
-      <p class="tiny muted center">MADHYUM Group • CRM Mobile</p>
+        <div class="login-divider"></div>
+        <div class="crm-product-label">CRM</div>
+        <p class="login-subtitle">One secure login for Admin, BDM and Agent.</p>
+
+        <div class="segmented" role="tablist" aria-label="Login type">
+          <button class="seg active" id="agentLoginTab" type="button"><span class="seg-icon">👥</span>Agent / BDM</button>
+          <button class="seg" id="adminLoginTab" type="button"><span class="seg-icon">◇</span>Admin</button>
+        </div>
+
+        <form id="loginForm" autocomplete="on">
+          <label class="field-label" for="loginId">ID</label>
+          <div class="login-input-wrap">
+            <span class="login-input-icon" aria-hidden="true">○</span>
+            <input id="loginId" class="input login-input" autocomplete="username" placeholder="Enter Agent / BDM ID" required>
+          </div>
+
+          <label class="field-label" for="loginPassword">PASSWORD</label>
+          <div class="password-wrap login-input-wrap">
+            <span class="login-input-icon" aria-hidden="true">▢</span>
+            <input id="loginPassword" class="input login-input" type="password" autocomplete="current-password" placeholder="Enter password" required>
+            <button id="togglePassword" class="icon-btn inside login-eye" type="button" aria-label="Show password">◉</button>
+          </div>
+
+          <div class="login-options">
+            <label class="remember-control"><input id="rememberLogin" type="checkbox"><span></span>Remember me</label>
+            <button id="forgotPasswordLink" type="button" class="forgot-link">Forgot password?</button>
+          </div>
+
+          <button id="loginButton" class="primary-btn login-primary" type="submit">Login <span>→</span></button>
+          <div id="loginMessage" class="form-message"></div>
+        </form>
+
+        <div class="login-values"><span></span>PEOPLE <b>|</b> OPPORTUNITIES <b>|</b> PROGRESS<span></span></div>
+        <div class="wing-strip" aria-label="MADHYUM business wings">
+          <div class="wing-item"><div class="wing-glyph">⌂</div><small>REAL ESTATE</small></div>
+          <div class="wing-item"><div class="wing-glyph">✈</div><small>TRAVEL</small></div>
+          <div class="wing-item"><div class="wing-glyph">◇</div><small>ADMISSION</small></div>
+          <div class="wing-item"><div class="wing-glyph">▣</div><small>CONSULTANCY</small></div>
+          <div class="wing-item"><div class="wing-glyph">□</div><small>EVENTS</small></div>
+        </div>
+      </div>
+      <div class="login-script">Your Requirement,<br>Our Network</div>
     </div>
   </section>
 
