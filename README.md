@@ -1,25 +1,31 @@
-# MADHYUM Group CRM Mobile PWA
+# MADHYUM GROUP CRM
 
-This package is a phone-first Progressive Web App that uses the existing MADHYUM Google Apps Script CRM backend and the same live data.
+Mobile-first PWA CRM designed to share the same online Supabase backend between agent web access and the phone app.
 
-## Files
-- `index.html` — single role-based login/app shell
-- `app.css` — mobile-first MADHYUM UI
-- `app.js` — Admin + BDM + Agent CRM client
-- `manifest.webmanifest` — installable app metadata
-- `sw.js` — offline shell/cache support
-- `icons/` — PWA icons
-- `Code.gs` — copy of the backend supplied for this build; keep the currently deployed backend unless intentionally replacing it
+## Folder structure
 
-## GitHub deployment
-1. Create a folder such as `/crm/` in the existing GitHub Pages repository.
-2. Upload `index.html`, `app.css`, `app.js`, `manifest.webmanifest`, `sw.js` and the `icons` folder to that same folder.
-3. Do not upload `Code.gs` to GitHub as a backend. It belongs in Google Apps Script. It is included here only as the reviewed backend reference.
-4. Open the GitHub Pages URL ending in `/crm/` on the phone.
-5. Android Chrome: menu → **Add to Home screen / Install app**.
+- `index.html` – app shell
+- `css/app.css` – premium soothing UI
+- `js/app.js` – screens, navigation and interactions
+- `js/database.js` – shared data layer
+- `js/config.js` – Supabase project URL + anon key
+- `js/ui.js` – UI helpers
+- `supabase/schema.sql` – database tables, triggers and RLS policies
+- `manifest.json` – PWA manifest
+- `service-worker.js` – offline/static caching
+- `icon/` – PWA icons
 
-## Backend
-The app points to the same Apps Script deployment URL already used by the supplied Agent and Admin dashboards. No new database is created.
+## Connect the live CRM
+
+1. Create/open the Supabase project used by the MADHYUM CRM portal.
+2. Run `supabase/schema.sql` once in Supabase SQL Editor.
+3. Put the project URL and anon key in `js/config.js`.
+4. Create users in Supabase Auth. New users automatically receive an `agent` profile.
+5. Change the required user's role to `admin` in `public.profiles` when needed.
+6. Publish the repository with GitHub Pages or another static host.
+
+When `js/config.js` has no Supabase credentials, the app intentionally runs in demo/local mode for UI testing.
 
 ## Important
-If the Apps Script web-app deployment URL changes in future, change the `API_URL` constant at the top of `app.js` and redeploy the static files.
+
+Do not place a Supabase service-role key in browser code. Only the anon/publishable browser key should be used, with RLS enabled.
