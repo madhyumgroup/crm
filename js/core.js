@@ -1,5 +1,5 @@
 'use strict';
-const API_URL='https://script.google.com/macros/s/AKfycby1axGjQXJHFYlsvPK4O9hW-oETEKNz7nQy9pS-jkGiKE6e14ogG3oAOY1ZM0MqKOc/exec';
+const API_URL='https://script.google.com/macros/s/AKfycbwd5x_8gPAzXMeP4TZPxLQQABisZ6Zn4lmGmzhfUsg83Z4xdnNY2dqb5KdZvRhGm4M/exec';
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 const cleanPhone=v=>String(v||'').replace(/\D/g,'').slice(-10);
@@ -11,7 +11,17 @@ let toastTimer=null;
 function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2600)}
 function busy(btn,on,text='Working...'){if(!btn)return;if(on){btn.dataset.old=btn.textContent;btn.disabled=true;btn.textContent=text}else{btn.disabled=false;btn.textContent=btn.dataset.old||btn.textContent}}
 function statusBadge(s){const k=String(s||'NEW').toLowerCase().replace(/\s+/g,'-');return `<span class="status s-${['new','contacted','follow-up','in-progress','converted','not-interested'].includes(k)?k:'default'}">${esc(s||'NEW')}</span>`}
-function followClass(d,status){if(!d||['CONVERTED','NOT INTERESTED'].includes(String(status||'').toUpperCase()))return'';const a=new Date(d+'T00:00:00'),b=new Date();b.setHours(0,0,0,0);return a<b?'overdue':a.getTime()===b.getTime()?'due':''}
+function parsePortalDate(v){
+  const s=String(v||'').trim();
+  if(!s)return null;
+  let m=s.match(/^(\\d{4})-(\\d{2})-(\\d{2})$/);if(m)return new Date(+m[1],+m[2]-1,+m[3]);
+  m=s.match(/^(\\d{1,2})[\\/.-](\\d{1,2})[\\/.-](\\d{4})$/);if(m)return new Date(+m[3],+m[2]-1,+m[1]);
+  return null;
+}
+function portalDateText(v){const d=parsePortalDate(v);return d?d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}):String(v||'—')}
+function followClass(d,status){if(!d||['CONVERTED','NOT INTERESTED'].includes(String(status||'').toUpperCase()))return'';const a=parsePortalDate(d);if(!a)return'';const b=new Date();b.setHours(0,0,0,0);a.setHours(0,0,0,0);return a<b?'overdue':a.getTime()===b.getTime()?'due':''}
+function isActionableRecord(x){return !!String(x?.name||'').trim() && !!String(x?.mobile||'').trim() && !!String(x?.requirement||'').trim()}
+function cleanRecords(rows){return (Array.isArray(rows)?rows:[]).filter(isActionableRecord)}
 function callActions(mobile){const m=cleanPhone(mobile);return m?`<a class="act-dark" href="tel:${m}">Call</a><a class="act-green" target="_blank" rel="noopener" href="https://wa.me/91${m}">WhatsApp</a>`:''}
 function openModal(title,html,actions=''){ $('modalRoot').innerHTML=`<div class="modal-backdrop" id="modalBackdrop"><div class="modal-sheet"><div class="modal-grip"></div><div class="modal-head"><h3>${esc(title)}</h3><button class="modal-close" id="modalClose">×</button></div>${html}${actions}</div></div>`;$('modalClose').onclick=closeModal;$('modalBackdrop').onclick=e=>{if(e.target.id==='modalBackdrop')closeModal()}}
 function closeModal(){$('modalRoot').innerHTML=''}

@@ -206,3 +206,23 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:
   .category-btn{min-height:70px;padding:9px}
   .category-btn strong{font-size:11.5px}
 }
+
+/* ===== 2026-09-12 MOBILE HERO DISPLAY FIX ===== */
+.app-header{
+  min-height:0!important;
+  aspect-ratio:1945/808;
+  padding:0!important;
+  border-radius:0 0 24px 24px!important;
+  background-image:url("../assets/dashboard-hero.jpg")!important;
+  background-size:contain!important;
+  background-repeat:no-repeat!important;
+  background-position:center top!important;
+  background-color:#071827!important;
+  box-shadow:0 10px 26px rgba(8,31,48,.12)!important;
+}
+.app-header:before,.app-header:after{display:none!important}
+.app-identity,.header-copy{display:none!important}
+.app-brand-row{position:absolute!important;inset:10px 10px auto auto!important;z-index:3!important;justify-content:flex-end!important;width:auto!important}
+.header-actions{gap:7px!important}
+.header-icon-btn{width:36px!important;height:36px!important;border-radius:11px!important;background:rgba(5,25,40,.78)!important}
+@media(max-width:480px){.app-header{aspect-ratio:1945/808}.header-icon-btn{width:34px!important;height:34px!important}}

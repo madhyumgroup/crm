@@ -1,5 +1,5 @@
 'use strict';
-if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+if('serviceWorker' in navigator)window.addEventListener('load',async()=>{try{const r=await navigator.serviceWorker.register('./sw.js?v=20260912.1');await r.update()}catch(_){}});
 window.navigate=navigate;window.closeModal=closeModal;window.logout=logout;window.openWingLeads=openWingLeads;
 
 let leadPollBusy=false;
