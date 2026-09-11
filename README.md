@@ -38,3 +38,25 @@ MADHYUM-CRM-PROFESSIONAL-FINAL/
 Upload the contents of this folder to the GitHub Pages repository root. Replace the old `index.html`, `css`, `js`, `icon`, `manifest.json`, `sw.js`/old service-worker file, and brand image with these files. Remove obsolete Supabase files from the previous demo architecture.
 
 The login field may visually say Login ID / Email, but the current backend authenticates with Admin ID or Agent/BDM ID unless email mapping is added to the Apps Script backend.
+
+
+## 2026-09-11 Locked Dashboard Enhancement
+This update keeps the existing working CRM architecture and backend. Added only controlled UI/functionality enhancements:
+- subtle dashboard photo header
+- clean white/off-white content background
+- five working MADHYUM business category buttons
+- in-app lead-change notification bell with unread count
+- 15-second visible-app polling for lead changes
+
+### Replace these files/folders in GitHub
+- index.html
+- css/app.css
+- js/core.js
+- js/navigation.js
+- js/agent.js
+- js/admin.js
+- js/app.js
+- sw.js
+- assets/dashboard-hero.jpg (new file)
+
+Leave api.js, auth.js, manifest.json, logo and icon files unchanged unless separately updating the app icon.
