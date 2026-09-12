@@ -206,3 +206,15 @@ function renderAgentLeads(){
 
   run()
 }
+/* FIX: REQUIRED FOR EDIT / DISPOSE BUTTONS */
+function bindLeadButtons(admin){
+  document.querySelectorAll('.edit-lead').forEach(b=>{
+    b.onclick=()=>openLeadEditor(b.dataset.id,admin);
+  });
+
+  if(admin){
+    document.querySelectorAll('.dispose-lead').forEach(b=>{
+      b.onclick=()=>disposeLead(b.dataset.type,b.dataset.id);
+    });
+  }
+}
